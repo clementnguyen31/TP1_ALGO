@@ -7,6 +7,16 @@
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
+bool EstArbreVide(Arbre_t a){
+  if(a->fgauche == NULL && a->fdroite == NULL){
+    return true;
+  }
+  return false;
+}
+
+
+
+
 int feuille(Arbre_t a)
 {
   if (a == NULL)
@@ -236,6 +246,20 @@ void imprimer_liste_cle_triee_r(Arbre_t a)
     return -1;
   }
 
+  printf("Voici la liste des clés triée : ");
+
+  F = creer_file();
+  enfiler(a, F) while (file_vide(F) != 0)
+  {
+    n = tete(F);
+    F = defiler(F);
+    if (!EstArbreVide(n))
+    {
+      F = enfiler(FilsGauche(n), F);
+      F = Enfiler(FilsDroit(n), F);
+      printf("%n",n->cle);          //Affiche les clés a chaque exécution dans le bon ordre car c'est un ABR
+    }
+  }
   return;
 }
 

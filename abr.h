@@ -3,7 +3,7 @@
 
 typedef struct n {
   int cle;
-  struct n *fgauche, *fdroite;
+  struct n *fgauche,*fdroite;
 } noeud_t, *pnoeud_t ;
 
 /* type Arbre, pointeur vers un noeud */
