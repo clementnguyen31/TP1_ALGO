@@ -15,8 +15,6 @@ bool EstArbreVide(Arbre_t a){
 }
 
 
-
-
 int feuille(Arbre_t a)
 {
   if (a == NULL)
@@ -156,15 +154,16 @@ void parcourir_arbre_largeur(Arbre_t a)
   }
 
   F = creer_file();
-  enfiler(a, F) while (file_vide(F) != 0)
+  enfiler(a, F);
+  while (file_vide(F) != 0)
   {
-    n = tete(F);
+    n = F->tete;
     F = defiler(F);
     if (!EstArbreVide(n))
     {
       F = enfiler(FilsGauche(n), F);
       F = Enfiler(FilsDroit(n), F);
-      Traiter(n);
+      printf("%n",n->cle);
     }
   }
 }
@@ -188,9 +187,10 @@ int nombre_cles_arbre_r(Arbre_t a)
 
   int nb_cle = 0;
   F = creer_file();
-  enfiler(a, F) while (file_vide(F) != 0)
+  enfiler(a, F);
+  while (file_vide(F) != 0)
   {
-    n = tete(F);
+    n = F->tete;
     F = defiler(F);
     if (!EstArbreVide(n))
     {
@@ -211,9 +211,10 @@ int nombre_cles_arbre_nr(Arbre_t a)
 
   int nb_cle = 0;
   F = creer_file();
-  enfiler(a, F) while (file_vide(F) != 0)
+  enfiler(a, F);
+  while (file_vide(F) != 0)
   {
-    n = tete(F);
+    n = F->tete;
     F = defiler(F);
     if (!EstArbreVide(n))
     {
@@ -235,7 +236,7 @@ int trouver_cle_min(Arbre_t a)
 if (EstVide(FilsGauche(a)){
     return a;}
   else{
-    return MINIMUM(FilsGauche(a))
+    return trouver_cle_min(FilsGauche(a))
     }
 }
 
@@ -249,9 +250,10 @@ void imprimer_liste_cle_triee_r(Arbre_t a)
   printf("Voici la liste des clés triée : ");
 
   F = creer_file();
-  enfiler(a, F) while (file_vide(F) != 0)
+  enfiler(a, F);
+  while (file_vide(F) != 0)
   {
-    n = tete(F);
+    n = F->tete;
     F = defiler(F);
     if (!EstArbreVide(n))
     {
@@ -273,7 +275,8 @@ void imprimer_liste_cle_triee_nr(Arbre_t a)
   printf("Voici la liste des clés triée : ");
 
   F = creer_file();
-  enfiler(a, F) while (file_vide(F) != 0)
+  enfiler(a, F);
+  while (file_vide(F) != 0)
   {
     n = tete(F);
     F = defiler(F);
