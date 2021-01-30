@@ -1,5 +1,5 @@
 #include <stdlib.h>
-
+#include <stdio.h>
 #include "abr.h"
 #include "file.h"
 
@@ -15,7 +15,11 @@ pfile_t creer_file()
 
 int detruire_file(pfile_t f)
 {
+  if(f == NULL){
+    return 0;
+  }
   free(f);
+  return 1;
 }
 
 int file_vide(pfile_t f)
@@ -38,36 +42,53 @@ int file_pleine(pfile_t f)
 
 pnoeud_t defiler(pfile_t f)
 {
-  if (file_pleine(f) == 0)
-  {
-    int i = 0;
-    pnoeud_t temp = &f->Tab[0]; //Pointeur sur l'élément à défiler
-    while (f->Tab[i + 1] != NULL)
-    {
-      f->Tab[i] = f->Tab[i + 1];
-    }
-    f->queue = f->Tab[i - 1];
-    f->Tab[i] = NULL; //Le dernier est a enlever
-
-    f->tete = f->Tab[0];
-    return temp;
+  if (file_pleine(f) == 1){
+    return NULL;
   }
+    int i = 0;
+    pnoeud_t temp = f->Tab[0]; //Pointeur sur l'élément à défiler
+
+    while (f->Tab[i+1] != NULL)
+    {
+      f->Tab[i] = f->Tab[i+1];
+      i++;
+    }
+    i++;
+
+    f->Tab[i] = NULL; //Le dernier est a enlever
+    
+    if(i > 0){
+      f->queue = f->Tab[i-1]->cle;
+    }
+    else{
+      f->queue = f->Tab[0]->cle;
+    }
+    f->tete = f->Tab[0]->cle;
+    return temp;
+  
 }
 
 int enfiler(pfile_t f, pnoeud_t p)
 {
 
-  int first_free; //indice de la premiere case libre
-  int temp;
+  int i = 0 ; //indice de la premiere case libre
 
-  while (first_free != 0)
-  {
-    f->Tab[first_free] = f->Tab[first_free - 1];
-    first_free = first_free - 1;
+  if(file_pleine(f) == 1){
+    return 0;
   }
-  f->Tab[first_free] = p;
 
-  f->tete = f->Tab[0];
-  f->queue = f->Tab[temp];
+  while (f->Tab[i] != NULL)
+  {
+    i++;
+  }
+
+  f->Tab[i] = p;
+  if(i==0){
+    f->tete = p->cle;
+    f->queue = p->cle;
+  }
+  else{
+    f->queue = p->cle;
+  }
   return 1;
 }
