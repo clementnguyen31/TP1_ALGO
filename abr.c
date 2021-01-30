@@ -294,13 +294,17 @@ int arbre_plein(Arbre_t a)
 {
   if (EstArbreVide(a) == 1)
   {
-    return -1;
+    return 1;
   }
-  /*
-    a completer
-  */
+  else{
+    arbre_plein(a->fgauche);
+    arbre_plein(a->fdroite);
 
-  return 0;
+    if(a->fgauche == NULL || a->fdroite == NULL){
+      return 0;
+    }
+  }
+  return 1;
 }
 
 int arbre_parfait(Arbre_t a)
@@ -319,7 +323,27 @@ Arbre_t rechercher_cle_sup_arbre(Arbre_t a, int valeur)
   {
     return -1;
   }
-  //stocker le max
+   Arbre_t max;//stocker le max
+   max->cle = null;
+
+  F = creer_file();
+  enfiler(a, F);
+  while (file_vide(F) != 0)
+  {
+    n = F->tete;
+    F = defiler(F);
+    if (!EstArbreVide(n))
+    {
+      F = enfiler(FilsGauche(n), F);
+      F = Enfiler(FilsDroit(n), F);
+      
+      if(n->cle > valeur && n->cle < max->cle){
+        max = n;
+      }
+    }
+  }
+  return max;
+  
   //A chaque nouvelle clé on vérifie si elle est supérieure a valeur et inférieure a max (on cherche celle directement supérieure)
 }
 
@@ -330,7 +354,28 @@ Arbre_t rechercher_cle_inf_arbre(Arbre_t a, int valeur)
     return -1;
   }
 
-  return NULL;
+   Arbre_t min;//stocker le min
+   min->cle = null;
+
+  F = creer_file();
+  enfiler(a, F);
+  while (file_vide(F) != 0)
+  {
+    n = F->tete;
+    F = defiler(F);
+    if (!EstArbreVide(n))
+    {
+      F = enfiler(FilsGauche(n), F);
+      F = Enfiler(FilsDroit(n), F);
+      
+      if(n->cle < valeur && n->cle > min->cle){
+        min = n;
+      }
+    }
+  }
+  return min;
+  
+ 
 }
 
 Arbre_t detruire_cle_arbre(Arbre_t a, int cle)
@@ -341,7 +386,9 @@ Arbre_t detruire_cle_arbre(Arbre_t a, int cle)
   }
   else if (e = Racine(a))
   {
-    SUPPRIMMER_RACINE(a); //Seule différence avec la fonction rechercher
+    SUPPRIMMER_RACINE(a);
+    a->cle = NULL; //La ligne au dessus est fausse c'est un repere
+    //Seule différence avec la fonction rechercher
   }
   else if (e < Racine(a))
   {
@@ -361,7 +408,7 @@ Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2)
     return -1;
   }
 
-  int *inter = malloc(Nombre_cles(a1)); //Le tableau qui va contenir les clés communes
+  int *inter = malloc(nombre_cles_arbre_nr(a1)); //Le tableau qui va contenir les clés communes
   int i = 0;
 
   F = creer_file();
