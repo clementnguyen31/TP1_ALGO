@@ -7,11 +7,11 @@
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-bool EstArbreVide(Arbre_t a){
+int EstArbreVide(Arbre_t a){
   if(a->fgauche == NULL && a->fdroite == NULL){
-    return true;
+    return 1;
   }
-  return false;
+  return 0;
 }
 
 
@@ -133,7 +133,13 @@ int hauteur_arbre_r(Arbre_t a)
     return -1;
   }
 
-  return 0;
+  int lh = hauteur_arbre_r(a->fgauche);
+  int rh = hauteur_arbre_r(a->fdroite);
+  
+  if(lh>rh){
+    return lh+1;
+  }
+  return rh+1;
 }
 
 int hauteur_arbre_nr(Arbre_t a)
@@ -150,29 +156,28 @@ void parcourir_arbre_largeur(Arbre_t a)
 {
   if (EstArbreVide(a) == 1)
   {
-    return -1;
+    return;
   }
 
-  F = creer_file();
-  enfiler(a, F);
+  pfile_t F = creer_file();
+  enfiler(F,a);
   while (file_vide(F) != 0)
   {
-    n = F->tete;
-    F = defiler(F);
+    Arbre_t n = defiler(F);
     if (!EstArbreVide(n))
     {
-      F = enfiler(FilsGauche(n), F);
-      F = Enfiler(FilsDroit(n), F);
-      printf("%n",n->cle);
+      enfiler(F, n->fgauche);
+      enfiler(F, n->fdroite);
+      printf("%d",n->cle);
     }
   }
 }
 
-void afficher_nombre_noeuds_par_niveau(Arbre_t a)
+void afficher_nombre_noeuds_par_niveau(Arbre_t a) //Parcours en largeur + print le nombre à chaque niveau
 {
   if (EstArbreVide(a) == 1)
   {
-    return -1;
+    return;
   }
 
   return;
@@ -186,16 +191,15 @@ int nombre_cles_arbre_r(Arbre_t a)
   }
 
   int nb_cle = 0;
-  F = creer_file();
-  enfiler(a, F);
+  pfile_t F = creer_file();
+  enfiler(F,a);
   while (file_vide(F) != 0)
   {
-    n = F->tete;
-    F = defiler(F);
+    Arbre_t n = defiler(F);
     if (!EstArbreVide(n))
     {
-      F = enfiler(FilsGauche(n), F);
-      F = Enfiler(FilsDroit(n), F);
+      enfiler(F, n->fgauche);
+      enfiler(F, n->fdroite);
       nb_cle++;
     }
   }
@@ -210,16 +214,15 @@ int nombre_cles_arbre_nr(Arbre_t a)
   }
 
   int nb_cle = 0;
-  F = creer_file();
-  enfiler(a, F);
+  pfile_t F = creer_file();
+  enfiler(F,a);
   while (file_vide(F) != 0)
   {
-    n = F->tete;
-    F = defiler(F);
-    if (!EstArbreVide(n))
+    Arbre_t n = defiler(F);
+    if (EstArbreVide(n) == 0)
     {
-      F = enfiler(FilsGauche(n), F);
-      F = Enfiler(FilsDroit(n), F);
+      enfiler(F, n->fgauche);
+      enfiler(F, n->fdroite);
       nb_cle++;
     }
   }
@@ -233,33 +236,34 @@ int trouver_cle_min(Arbre_t a)
     return -1;
   }
 
-if (EstVide(FilsGauche(a)){
-    return a;}
+if (EstArbreVide(a->fgauche) == 1){
+    return a->cle;}
   else{
-    return trouver_cle_min(FilsGauche(a))
+    return trouver_cle_min(a->fgauche);
     }
+
+  return -1;
 }
 
 void imprimer_liste_cle_triee_r(Arbre_t a)
 {
   if (EstArbreVide(a) == 1)
   {
-    return -1;
+    return;
   }
 
   printf("Voici la liste des clés triée : ");
 
-  F = creer_file();
-  enfiler(a, F);
+  pfile_t F = creer_file();
+  enfiler(F,a);
   while (file_vide(F) != 0)
   {
-    n = F->tete;
-    F = defiler(F);
-    if (!EstArbreVide(n))
+    Arbre_t n = defiler(F);
+    if (EstArbreVide(n) == 0)
     {
-      F = enfiler(FilsGauche(n), F);
-      F = Enfiler(FilsDroit(n), F);
-      printf("%n",n->cle);          //Affiche les clés a chaque exécution dans le bon ordre car c'est un ABR
+      enfiler(F, n->fgauche);
+      enfiler(F, n->fdroite);
+      printf("%d",n->cle);          //Affiche les clés a chaque exécution dans le bon ordre car c'est un ABR
     }
   }
   return;
@@ -269,22 +273,21 @@ void imprimer_liste_cle_triee_nr(Arbre_t a)
 {
   if (EstArbreVide(a) == 1)
   {
-    return -1;
+    return;
   }
 
   printf("Voici la liste des clés triée : ");
 
-  F = creer_file();
-  enfiler(a, F);
+  pfile_t F = creer_file();
+  enfiler(F,a);
   while (file_vide(F) != 0)
   {
-    n = tete(F);
-    F = defiler(F);
-    if (!EstArbreVide(n))
+    Arbre_t n = defiler(F);
+    if (EstArbreVide(n) == 0 )
     {
-      F = enfiler(FilsGauche(n), F);
-      F = Enfiler(FilsDroit(n), F);
-      printf("%n",n->cle);          //Affiche les clés a chaque exécution dans le bon ordre car c'est un ABR
+      enfiler(F, n->fgauche);
+      enfiler(F, n->fdroite);
+      printf("%d",n->cle);          //Affiche les clés a chaque exécution dans le bon ordre car c'est un ABR
     }
   }
   return;
@@ -321,21 +324,20 @@ Arbre_t rechercher_cle_sup_arbre(Arbre_t a, int valeur)
 {
   if (EstArbreVide(a) == 1)
   {
-    return -1;
+    return NULL;
   }
    Arbre_t max;//stocker le max
-   max->cle = null;
+   max->cle = -1;
 
-  F = creer_file();
-  enfiler(a, F);
+  pfile_t F = creer_file();
+  enfiler(F,a);
   while (file_vide(F) != 0)
   {
-    n = F->tete;
-    F = defiler(F);
-    if (!EstArbreVide(n))
+    Arbre_t n = defiler(F);
+    if (EstArbreVide(n) == 0)
     {
-      F = enfiler(FilsGauche(n), F);
-      F = Enfiler(FilsDroit(n), F);
+      enfiler(F, n->fgauche);
+      enfiler(F, n->fdroite);
       
       if(n->cle > valeur && n->cle < max->cle){
         max = n;
@@ -351,22 +353,21 @@ Arbre_t rechercher_cle_inf_arbre(Arbre_t a, int valeur)
 {
   if (EstArbreVide(a) == 1)
   {
-    return -1;
+    return NULL;
   }
 
    Arbre_t min;//stocker le min
-   min->cle = null;
+   min->cle = -1;
 
-  F = creer_file();
-  enfiler(a, F);
+  pfile_t F = creer_file();
+  enfiler(F,a);
   while (file_vide(F) != 0)
   {
-    n = F->tete;
-    F = defiler(F);
-    if (!EstArbreVide(n))
+    Arbre_t n = defiler(F);
+    if (EstArbreVide(n) == 0 )
     {
-      F = enfiler(FilsGauche(n), F);
-      F = Enfiler(FilsDroit(n), F);
+      enfiler(F, n->fgauche);
+      enfiler(F, n->fdroite);
       
       if(n->cle < valeur && n->cle > min->cle){
         min = n;
@@ -374,95 +375,80 @@ Arbre_t rechercher_cle_inf_arbre(Arbre_t a, int valeur)
     }
   }
   return min;
-  
- 
 }
 
 Arbre_t detruire_cle_arbre(Arbre_t a, int cle)
 {
-  if (EstVide(a))
-  {
-    return ArbreVide();
-  }
-  else if (e = Racine(a))
-  {
-    SUPPRIMMER_RACINE(a);
-    a->cle = NULL; //La ligne au dessus est fausse c'est un repere
-    //Seule différence avec la fonction rechercher
-  }
-  else if (e < Racine(a))
-  {
-    return RECHERCHER(e, FilsGauche(a));
-  }
-  else if (e > Racine(a))
-  {
-    return RECHERCHER(e, FilsDroit(a));
-  }
+  return NULL;
 }
 
 Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2)
 {
 
-  if (EstArbreVide(a) == 1)
+  if (EstArbreVide(a1) == 1 || EstArbreVide(a2) == 1)
   {
-    return -1;
+    return NULL;
   }
+  
 
   int *inter = malloc(nombre_cles_arbre_nr(a1)); //Le tableau qui va contenir les clés communes
   int i = 0;
 
-  F = creer_file();
-  F2 = creer_file();
-  enfiler(a1, F);
-  enfiler(a2, F2) while (file_vide(F) != 0 && file_vide(F2) != 0)
+  pfile_t F = creer_file();
+  enfiler(F, a1);
+  
+  
+  while (file_vide(F) != 0 )
   {
-    Arbre_t n = tete(F);
-    Arbre_t n2 = tete(F2);
-    F = defiler(F);
-    F2 = defiler(F2);
-    if (!EstArbreVide(n) && !EstArbreVide(n2))
+    Arbre_t n = defiler(F);
+    
+    if (EstArbreVide(n) == 0)
     {
-      F = enfiler(FilsGauche(n), F);
-      F = enfiler(FilsDroit(n), F);
-      F2 = enfiler(FilsGauche(n2), F2);
-      F2 = enfiler(FilsDroit(n2), F2);
-
-      if (n->cle == n2->cle)
+      enfiler(F, n->fgauche);
+      enfiler(F, n->fdroite);
+  
+      if (rechercher_cle_arbre(a2,n->cle) != NULL)
       { //Rajoute la clé de l'intersection au tableau
         inter[i] = n->cle;
         i++;
       }
     }
   }
+  Arbre_t abr;
+  for(int j = 0; j< i; j++){
+    ajouter_cle(abr,inter[j]);
+  }
+  return abr;
 }
 
-Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2)
+Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) //Pa compri
 {
-  if (EstArbreVide(a) == 1)
+  if (EstArbreVide(a1) == 1)
   {
-    return -1;
+    return NULL;
   }
 
   return NULL;
 }
 
-Rechercher(int cle, Arbre_t a)
+Arbre_t Rechercher(int cle, Arbre_t a)
 {
-
-  if (EstVide(a))
+  if (EstArbreVide(a) == 1)
   {
-    return ArbreVide();
+    return NULL;
   }
-  else if (e = Racine(a))
+  else if (cle == a->cle)
   {
     return a;
   }
-  else if (e < Racine(a))
+  else if (cle < a->cle)
   {
-    return RECHERCHER(e, FilsGauche(a));
+    return Rechercher(cle, a->fgauche);
   }
-  else if (e > Racine(a))
+  else if (cle > a->cle)
   {
-    return RECHERCHER(e, FilsDroit(a));
+    return Rechercher(cle, a->fdroite);
   }
+
+  return NULL;
 }

@@ -1,4 +1,4 @@
-all: pile.o file.o test_pile.o test_pile test_file.o test_file
+all: test_abr pile.o file.o test_pile.o test_pile test_file.o test_file
 
 abr.o: abr.c abr.h pile.h file.h
 	gcc -Wall -c abr.c

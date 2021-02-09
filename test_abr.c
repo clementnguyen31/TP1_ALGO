@@ -17,8 +17,5 @@ int main (int argc, char**argv)
   
   afficher_arbre (a,0) ;
 
-  /*
-     appeler les fonctions que vous
-     avez implementees
-  */
+  
 }
