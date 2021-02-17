@@ -16,6 +16,8 @@ int main (int argc, char**argv)
   a = lire_arbre (argv[1]) ;
   
   afficher_arbre (a,0) ;
+  nombre_cles_arbre_nr(a);
+  
 
   
 }

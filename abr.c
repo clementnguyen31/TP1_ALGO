@@ -47,8 +47,10 @@ Arbre_t rechercher_cle_arbre(Arbre_t a, int valeur)
     return NULL;
   else
   {
-    if (a->cle == valeur)
+    if (a->cle == valeur){
+      printf("%d\n",a->cle);
       return a;
+    }
     else
     {
       if (a->cle < valeur)
@@ -161,15 +163,17 @@ void parcourir_arbre_largeur(Arbre_t a)
 
   pfile_t F = creer_file();
   enfiler(F,a);
-  while (file_vide(F) != 0)
+  Arbre_t n;
+  while (file_vide(F) != 1)
   {
-    Arbre_t n = defiler(F);
-    if (!EstArbreVide(n))
-    {
+    n = defiler(F);
+    if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
-      enfiler(F, n->fdroite);
-      printf("%d",n->cle);
     }
+    if (n->fdroite != NULL) {
+      enfiler(F, n->fdroite);
+    }
+    printf("%d\n",n->cle);
   }
 }
 
@@ -212,22 +216,28 @@ int nombre_cles_arbre_nr(Arbre_t a)
   {
     return -1;
   }
-
   int nb_cle = 0;
   pfile_t F = creer_file();
   enfiler(F,a);
-  while (file_vide(F) != 0)
+  Arbre_t n;
+  while (file_vide(F) != 1)
   {
-    Arbre_t n = defiler(F);
-    if (EstArbreVide(n) == 0)
-    {
+    n = defiler(F);
+    if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
+      nb_cle++;
+    }
+    if (n->fdroite != NULL) {
       enfiler(F, n->fdroite);
       nb_cle++;
     }
   }
+  
+  printf("Il y a : %d clés dans l'arbre",nb_cle);
   return nb_cle;
 }
+
+
 
 int trouver_cle_min(Arbre_t a)
 {
@@ -252,21 +262,20 @@ void imprimer_liste_cle_triee_r(Arbre_t a)
     return;
   }
 
-  printf("Voici la liste des clés triée : ");
-
   pfile_t F = creer_file();
   enfiler(F,a);
-  while (file_vide(F) != 0)
+  Arbre_t n;
+  while (file_vide(F) != 1)
   {
-    Arbre_t n = defiler(F);
-    if (EstArbreVide(n) == 0)
-    {
+    n = defiler(F);
+    if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
-      enfiler(F, n->fdroite);
-      printf("%d",n->cle);          //Affiche les clés a chaque exécution dans le bon ordre car c'est un ABR
     }
+    if (n->fdroite != NULL) {
+      enfiler(F, n->fdroite);
+    }
+    printf("%d\n",n->cle);
   }
-  return;
 }
 
 void imprimer_liste_cle_triee_nr(Arbre_t a)
@@ -276,21 +285,20 @@ void imprimer_liste_cle_triee_nr(Arbre_t a)
     return;
   }
 
-  printf("Voici la liste des clés triée : ");
-
   pfile_t F = creer_file();
   enfiler(F,a);
-  while (file_vide(F) != 0)
+  Arbre_t n;
+  while (file_vide(F) != 1)
   {
-    Arbre_t n = defiler(F);
-    if (EstArbreVide(n) == 0 )
-    {
+    n = defiler(F);
+    if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
-      enfiler(F, n->fdroite);
-      printf("%d",n->cle);          //Affiche les clés a chaque exécution dans le bon ordre car c'est un ABR
     }
+    if (n->fdroite != NULL) {
+      enfiler(F, n->fdroite);
+    }
+    printf("%d\n",n->cle);
   }
-  return;
 }
 
 int arbre_plein(Arbre_t a)
@@ -326,54 +334,62 @@ Arbre_t rechercher_cle_sup_arbre(Arbre_t a, int valeur)
   {
     return NULL;
   }
-   Arbre_t max;//stocker le max
+   Arbre_t max = NULL;//stocker le max
    max->cle = -1;
 
   pfile_t F = creer_file();
   enfiler(F,a);
+  Arbre_t n;
   while (file_vide(F) != 0)
   {
-    Arbre_t n = defiler(F);
-    if (EstArbreVide(n) == 0)
-    {
+    n = defiler(F);
+    if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
+    }
+    if (n->fdroite != NULL) {
       enfiler(F, n->fdroite);
+    }
       
-      if(n->cle > valeur && n->cle < max->cle){
-        max = n;
-      }
+    if(n->cle > valeur && n->cle < max->cle){
+      max = n;
     }
   }
+
+  printf("%d\n",max->cle);
   return max;
   
   //A chaque nouvelle clé on vérifie si elle est supérieure a valeur et inférieure a max (on cherche celle directement supérieure)
 }
 
+
 Arbre_t rechercher_cle_inf_arbre(Arbre_t a, int valeur)
 {
-  if (EstArbreVide(a) == 1)
+ if (EstArbreVide(a) == 1)
   {
     return NULL;
   }
-
-   Arbre_t min;//stocker le min
+   Arbre_t min = NULL;//stocker le max
    min->cle = -1;
 
   pfile_t F = creer_file();
   enfiler(F,a);
+  Arbre_t n;
   while (file_vide(F) != 0)
   {
-    Arbre_t n = defiler(F);
-    if (EstArbreVide(n) == 0 )
-    {
+    n = defiler(F);
+    if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
+    }
+    if (n->fdroite != NULL) {
       enfiler(F, n->fdroite);
+    }
       
-      if(n->cle < valeur && n->cle > min->cle){
-        min = n;
-      }
+    if(n->cle < valeur && n->cle > min->cle){
+      min = n;
     }
   }
+
+  printf("%d\n",min->cle);
   return min;
 }
 
@@ -396,25 +412,27 @@ Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2)
 
   pfile_t F = creer_file();
   enfiler(F, a1);
+  Arbre_t n;
   
-  
-  while (file_vide(F) != 0 )
+  while(file_vide(F) != 0 )
   {
-    Arbre_t n = defiler(F);
+    n = defiler(F);
     
-    if (EstArbreVide(n) == 0)
-    {
+    if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
+    }
+    if (n->fdroite != NULL) {
       enfiler(F, n->fdroite);
+    }
   
-      if (rechercher_cle_arbre(a2,n->cle) != NULL)
-      { //Rajoute la clé de l'intersection au tableau
-        inter[i] = n->cle;
-        i++;
-      }
+    if (rechercher_cle_arbre(a2,n->cle) != NULL)
+    { //Rajoute la clé de l'intersection au tableau
+      inter[i] = n->cle;
+      i++;
     }
   }
-  Arbre_t abr;
+
+  Arbre_t abr = NULL;
   for(int j = 0; j< i; j++){
     ajouter_cle(abr,inter[j]);
   }

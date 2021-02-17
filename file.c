@@ -24,7 +24,7 @@ int detruire_file(pfile_t f)
 
 int file_vide(pfile_t f)
 {
-  if (f->tete == -1)
+  if (f->queue == (f->tete)%(MAX_FILE_SIZE))
   {
     return 1;
   }
@@ -40,55 +40,24 @@ int file_pleine(pfile_t f)
   return 0;
 }
 
-pnoeud_t defiler(pfile_t f)
-{
-  if (file_pleine(f) == 1){
+
+
+pnoeud_t defiler (pfile_t f)
+  {
+  if (file_vide(f) == 1) {
     return NULL;
   }
-    int i = 0;
-    pnoeud_t temp = f->Tab[0]; //Pointeur sur l'élément à défiler
-
-    while (f->Tab[i+1] != NULL)
-    {
-      f->Tab[i] = f->Tab[i+1];
-      i++;
-    }
-    i++;
-
-    f->Tab[i] = NULL; //Le dernier est a enlever
-    
-    if(i > 0){
-      f->queue = f->Tab[i-1]->cle;
-    }
-    else{
-      f->queue = f->Tab[0]->cle;
-    }
-    f->tete = f->Tab[0]->cle;
-    return temp;
-  
+  f->tete = f->tete+1; 
+  pnoeud_t retour = f->Tab[(f->tete)%(MAX_FILE_SIZE)];
+  return retour;
 }
 
-int enfiler(pfile_t f, pnoeud_t p)
+int enfiler (pfile_t f, pnoeud_t p)
 {
-
-  int i = 0 ; //indice de la premiere case libre
-
-  if(file_pleine(f) == 1){
-    return 0;
+  if (file_pleine(f) != 1) {
+    f->queue += 1; 
+    f->Tab[(f->queue)%(MAX_FILE_SIZE)] = p; 
+    return f->queue;
   }
-
-  while (f->Tab[i] != NULL)
-  {
-    i++;
-  }
-
-  f->Tab[i] = p;
-  if(i==0){
-    f->tete = p->cle;
-    f->queue = p->cle;
-  }
-  else{
-    f->queue = p->cle;
-  }
-  return 1;
+  return 0;
 }

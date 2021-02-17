@@ -12,6 +12,6 @@ printf("%d",file_vide(f));
 pnoeud_t p = malloc(sizeof(noeud_t));
 p->cle = 4;
 enfiler(f,p);
-defiler(f);
+printf("%d",defiler(f)->cle);
 return 1;
 }
