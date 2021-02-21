@@ -16,8 +16,11 @@ int main (int argc, char**argv)
   a = lire_arbre (argv[1]) ;
   
   afficher_arbre (a,0) ;
-  nombre_cles_arbre_nr(a);
-  
+  printf("%d\n",nombre_cles_arbre_nr(a));
+  printf("%d\n",nombre_cles_arbre_r(a));
+  printf("%d\n",hauteur_arbre_r(a));
 
+  printf("%d\n",rechercher_cle_sup_arbre(a,6)->cle);
+  printf("%d\n",rechercher_cle_inf_arbre(a,6)->cle);
   
 }

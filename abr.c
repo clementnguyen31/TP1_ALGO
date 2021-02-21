@@ -7,7 +7,8 @@
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
-int EstArbreVide(Arbre_t a){
+int EstArbreVide(Arbre_t a) //DONE
+{
   if(a->fgauche == NULL && a->fdroite == NULL){
     return 1;
   }
@@ -15,7 +16,7 @@ int EstArbreVide(Arbre_t a){
 }
 
 
-int feuille(Arbre_t a)
+int feuille(Arbre_t a) //DONE
 {
   if (a == NULL)
     return 0;
@@ -28,7 +29,7 @@ int feuille(Arbre_t a)
   }
 }
 
-Arbre_t ajouter_noeud(Arbre_t a, Arbre_t n)
+Arbre_t ajouter_noeud(Arbre_t a, Arbre_t n) //DONE
 {
   /* ajouter le noeud n dans l'arbre a */
 
@@ -41,7 +42,7 @@ Arbre_t ajouter_noeud(Arbre_t a, Arbre_t n)
   return a;
 }
 
-Arbre_t rechercher_cle_arbre(Arbre_t a, int valeur)
+Arbre_t rechercher_cle_arbre(Arbre_t a, int valeur) //QUASI DONE
 {
   if (a == NULL)
     return NULL;
@@ -61,7 +62,7 @@ Arbre_t rechercher_cle_arbre(Arbre_t a, int valeur)
   }
 }
 
-Arbre_t ajouter_cle(Arbre_t a, int cle)
+Arbre_t ajouter_cle(Arbre_t a, int cle) //DONE
 {
   Arbre_t n;
   Arbre_t ptrouve;
@@ -87,7 +88,7 @@ Arbre_t ajouter_cle(Arbre_t a, int cle)
     return a;
 }
 
-Arbre_t lire_arbre(char *nom_fichier)
+Arbre_t lire_arbre(char *nom_fichier) //DONE
 {
   FILE *f;
   int cle;
@@ -105,7 +106,7 @@ Arbre_t lire_arbre(char *nom_fichier)
   return a;
 }
 
-void afficher_arbre(Arbre_t a, int niveau)
+void afficher_arbre(Arbre_t a, int niveau) //DONE
 {
   /*
     affichage de l'arbre a
@@ -128,23 +129,26 @@ void afficher_arbre(Arbre_t a, int niveau)
   return;
 }
 
-int hauteur_arbre_r(Arbre_t a)
+int hauteur_arbre_r(Arbre_t a) //DONE
 {
-  if (EstArbreVide(a) == 1)
+ 
+  if (a == NULL)
   {
-    return -1;
+    return 0;
   }
 
-  int lh = hauteur_arbre_r(a->fgauche);
-  int rh = hauteur_arbre_r(a->fdroite);
+  int left_height = hauteur_arbre_r(a->fgauche);
+  int right_height = hauteur_arbre_r(a->fdroite);
   
-  if(lh>rh){
-    return lh+1;
+  if(left_height >= right_height){
+    return left_height+1;
   }
-  return rh+1;
+  else{
+    return right_height+1;
+  }
 }
 
-int hauteur_arbre_nr(Arbre_t a)
+int hauteur_arbre_nr(Arbre_t a) //PAS DONE
 {
   if (EstArbreVide(a) == 1)
   {
@@ -154,7 +158,7 @@ int hauteur_arbre_nr(Arbre_t a)
   return 0;
 }
 
-void parcourir_arbre_largeur(Arbre_t a)
+void parcourir_arbre_largeur(Arbre_t a) //DONE
 {
   if (EstArbreVide(a) == 1)
   {
@@ -187,36 +191,35 @@ void afficher_nombre_noeuds_par_niveau(Arbre_t a) //Parcours en largeur + print 
   return;
 }
 
-int nombre_cles_arbre_r(Arbre_t a)
+
+int nombre_cles_arbre_r(Arbre_t a) //DONE
 {
-  if (EstArbreVide(a) == 1)
+  int nb_cle = 1;
+
+
+  if(EstArbreVide(a))
   {
-    return -1;
+    return 1;
   }
 
-  int nb_cle = 0;
-  pfile_t F = creer_file();
-  enfiler(F,a);
-  while (file_vide(F) != 0)
-  {
-    Arbre_t n = defiler(F);
-    if (!EstArbreVide(n))
-    {
-      enfiler(F, n->fgauche);
-      enfiler(F, n->fdroite);
-      nb_cle++;
-    }
+  
+  if(a->fgauche != NULL ){
+    nb_cle = nb_cle + nombre_cles_arbre_r(a->fgauche);
   }
+  if(a->fdroite != NULL){
+    nb_cle = nb_cle + nombre_cles_arbre_r(a->fdroite);
+  }
+  
   return nb_cle;
 }
 
-int nombre_cles_arbre_nr(Arbre_t a)
+int nombre_cles_arbre_nr(Arbre_t a) //DONE
 {
   if (EstArbreVide(a) == 1)
   {
     return -1;
   }
-  int nb_cle = 0;
+  int nb_cle = 1;
   pfile_t F = creer_file();
   enfiler(F,a);
   Arbre_t n;
@@ -233,20 +236,19 @@ int nombre_cles_arbre_nr(Arbre_t a)
     }
   }
   
-  printf("Il y a : %d clés dans l'arbre",nb_cle);
   return nb_cle;
 }
 
 
 
-int trouver_cle_min(Arbre_t a)
+int trouver_cle_min(Arbre_t a) //QUASI DONE
 {
   if (EstArbreVide(a) == 1)
   {
     return -1;
   }
 
-if (EstArbreVide(a->fgauche) == 1){
+  if (EstArbreVide(a->fgauche) == 1){
     return a->cle;}
   else{
     return trouver_cle_min(a->fgauche);
@@ -328,69 +330,89 @@ int arbre_parfait(Arbre_t a)
   return 0;
 }
 
-Arbre_t rechercher_cle_sup_arbre(Arbre_t a, int valeur)
+Arbre_t rechercher_cle_sup_arbre(Arbre_t a, int valeur) //DONE
 {
   if (EstArbreVide(a) == 1)
   {
     return NULL;
   }
-   Arbre_t max = NULL;//stocker le max
+   Arbre_t max;//stocker le max
    max->cle = -1;
 
   pfile_t F = creer_file();
   enfiler(F,a);
   Arbre_t n;
-  while (file_vide(F) != 0)
+  
+  while (file_vide(F) != 1)
   {
+    
     n = defiler(F);
+
     if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
     }
     if (n->fdroite != NULL) {
       enfiler(F, n->fdroite);
     }
-      
+
+    if(max->cle == -1){
+      if(n->cle > valeur){
+        max = n;
+        max->cle = n->cle;
+      }
+    }
+    
     if(n->cle > valeur && n->cle < max->cle){
+      printf("%d\n",995);
       max = n;
     }
   }
 
-  printf("%d\n",max->cle);
   return max;
   
   //A chaque nouvelle clé on vérifie si elle est supérieure a valeur et inférieure a max (on cherche celle directement supérieure)
 }
 
 
-Arbre_t rechercher_cle_inf_arbre(Arbre_t a, int valeur)
+Arbre_t rechercher_cle_inf_arbre(Arbre_t a, int valeur) //DONE
 {
  if (EstArbreVide(a) == 1)
   {
     return NULL;
   }
-   Arbre_t min = NULL;//stocker le max
+   Arbre_t min;//stocker le max
    min->cle = -1;
 
   pfile_t F = creer_file();
   enfiler(F,a);
   Arbre_t n;
-  while (file_vide(F) != 0)
+  
+  while (file_vide(F) != 1)
   {
+    
     n = defiler(F);
+
     if (n->fgauche != NULL) {
       enfiler(F, n->fgauche);
     }
     if (n->fdroite != NULL) {
       enfiler(F, n->fdroite);
     }
-      
+
+    if(min->cle == -1){
+      if(n->cle > valeur){
+        min = n;
+        min->cle = n->cle;
+      }
+    }
+    
     if(n->cle < valeur && n->cle > min->cle){
       min = n;
     }
   }
 
-  printf("%d\n",min->cle);
   return min;
+  
 }
 
 Arbre_t detruire_cle_arbre(Arbre_t a, int cle)
@@ -398,7 +420,7 @@ Arbre_t detruire_cle_arbre(Arbre_t a, int cle)
   return NULL;
 }
 
-Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2)
+Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
 {
 
   if (EstArbreVide(a1) == 1 || EstArbreVide(a2) == 1)
@@ -439,7 +461,7 @@ Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2)
   return abr;
 }
 
-Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) //Pa compri
+Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) 
 {
   if (EstArbreVide(a1) == 1)
   {
@@ -449,7 +471,7 @@ Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) //Pa compri
   return NULL;
 }
 
-Arbre_t Rechercher(int cle, Arbre_t a)
+Arbre_t Rechercher(int cle, Arbre_t a) //DONE
 {
   if (EstArbreVide(a) == 1)
   {
