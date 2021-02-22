@@ -17,8 +17,10 @@ int main (int argc, char**argv)
   a = lire_arbre (argv[1]) ;
   b = lire_arbre (argv[2]) ;
   afficher_arbre (a,0) ;
-  printf("%d\n",nombre_cles_arbre_nr(a));
-  printf("%d\n",nombre_cles_arbre_r(a));
   
-  afficher_arbre (intersection_deux_arbres(a,b),0);
+  
+  afficher_arbre (b,0) ;
+  
+
+  afficher_arbre(intersection_deux_arbres(a,b),0);
 }

@@ -428,20 +428,19 @@ Arbre_t rechercher_cle_inf_arbre(Arbre_t a, int valeur) //DONE
   
 }
 
-Arbre_t detruire_cle_arbre(Arbre_t a, int cle)
+Arbre_t detruire_cle_arbre(Arbre_t a, int cle) //PAS DONE
 {
   return NULL;
 }
 
 Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
 {
-
   if (EstArbreVide(a1) == 1 || EstArbreVide(a2) == 1)
   {
     return NULL;
   }
   
-
+  
   int *inter = malloc(nombre_cles_arbre_nr(a1)); //Le tableau qui va contenir les clés communes
   int i = 0;
 
@@ -449,7 +448,7 @@ Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
   enfiler(F, a1);
   Arbre_t n;
   
-  while(file_vide(F) != 0 )
+  while(file_vide(F) != 1 )
   {
     n = defiler(F);
     
@@ -459,7 +458,7 @@ Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
     if (n->fdroite != NULL) {
       enfiler(F, n->fdroite);
     }
-  
+    
     if (rechercher_cle_arbre(a2,n->cle) != NULL)
     { //Rajoute la clé de l'intersection au tableau
       inter[i] = n->cle;
@@ -467,7 +466,7 @@ Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
     }
   }
   
-  Arbre_t abr = NULL;
+  Arbre_t abr;
   for(int j = 0; j< i; j++){
     ajouter_cle(abr,inter[j]);
   }
