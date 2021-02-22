@@ -50,7 +50,6 @@ Arbre_t rechercher_cle_arbre(Arbre_t a, int valeur) //DONE
   else
   {
     if (a->cle == valeur){
-      printf("%d\n",a->cle);
       return a;
     }
     else
@@ -149,15 +148,41 @@ int hauteur_arbre_r(Arbre_t a) //DONE
   }
 }
 
-int hauteur_arbre_nr(Arbre_t a) //PAS DONE
+int hauteur_arbre_nr(Arbre_t a) //DONE
 {
-  if (EstArbreVide(a) == 1)
-  {
-    return -1;
+  if (a == NULL) 
+      return 0; 
+  
+    // Create an empty queue for level order tarversal 
+  pfile_t F = creer_file(); 
+  
+    // Enqueue Root and initialize height 
+  enfiler(F,a); 
+  int hauteur = 0; 
+  
+  while (1) 
+  { 
+        // nodeCount (queue size) indicates number of nodes 
+        // at current lelvel. 
+    int nombre_noeud = taille(F); 
+    if (nombre_noeud == 0) 
+        return hauteur; 
+    
+    hauteur++; 
+  
+        // Dequeue all nodes of current level and Enqueue all 
+        // nodes of next level 
+    while (nombre_noeud > 0) 
+    { 
+      Arbre_t noeud = defiler(F);  
+      if (noeud->fgauche != NULL) 
+        enfiler(F,noeud->fgauche); 
+      if (noeud->fdroite!= NULL) 
+        enfiler(F,noeud->fdroite); 
+      nombre_noeud--; 
+    } 
   }
-
-  return 0;
-}
+} 
 
 void parcourir_arbre_largeur(Arbre_t a) //DONE
 {
@@ -182,37 +207,35 @@ void parcourir_arbre_largeur(Arbre_t a) //DONE
   }
 }
 
-void afficher_nombre_noeuds_par_niveau(Arbre_t a) //Pas Done
+void afficher_nombre_noeuds_par_niveau(Arbre_t a) //DONE
 {
-  if (EstArbreVide(a) == 1)
-  {
-    return;
-  }
-
-  pfile_t F = creer_file();
-  enfiler(F,a);
-  Arbre_t n;
-  int nivmax = hauteur_arbre_r(a);
+  if (a == NULL) 
+      return ; 
+  
+  pfile_t F = creer_file(); 
+  
+  enfiler(F,a); 
   int i = 0;
-  while (file_vide(F) != 1)
+  
+  while (1) 
   {
-    n = defiler(F);
-    if (n->fgauche != NULL) {
-      enfiler(F, n->fgauche);
+    int nombre_noeud = taille(F); 
+    if (nombre_noeud == 0) 
+        return; 
 
-    }
-    if (n->fdroite != NULL) {
-      enfiler(F, n->fdroite);
-    }
-
-    if(hauteur_arbre_r(n) != nivmax){
-      printf("%d\n",i);
-      i = 0;
-      nivmax--;
-    }
+    printf("Au niveau %d il y a %d noeuds \n",i,nombre_noeud);
     i++;
+
+    while (nombre_noeud > 0) 
+    { 
+      Arbre_t noeud = defiler(F);  
+      if (noeud->fgauche != NULL) 
+        enfiler(F,noeud->fgauche); 
+      if (noeud->fdroite!= NULL) 
+        enfiler(F,noeud->fdroite); 
+      nombre_noeud--; 
+    } 
   }
-  return;
 }
 
 
@@ -300,7 +323,7 @@ void imprimer_liste_cle_triee_r(Arbre_t a) //DONE
 
 }
 
-void imprimer_liste_cle_triee_nr(Arbre_t a)
+void imprimer_liste_cle_triee_nr(Arbre_t a) //PAS DONE MAIS EASY
 {
   if (EstArbreVide(a) == 1)
   {
@@ -473,14 +496,47 @@ Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
   return abr;
 }
 
-Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) //PAS DONE
+Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
 {
-  if (EstArbreVide(a1) == 1)
+  if (EstArbreVide(a1) == 1 || EstArbreVide(a2) == 1)
   {
     return NULL;
   }
 
-  return NULL;
+  Arbre_t abr;
+  pfile_t F = creer_file();
+  pfile_t F2 = creer_file();
+  enfiler(F, a1);
+  enfiler(F2, a2);
+  Arbre_t n;
+  
+  while(file_vide(F) != 1 )
+  {
+    n = defiler(F);
+    
+    if (n->fgauche != NULL) {
+      enfiler(F, n->fgauche);
+    }
+    if (n->fdroite != NULL) {
+      enfiler(F, n->fdroite);
+    }
+    ajouter_cle(abr,n->cle);
+  }
+  
+  while(file_vide(F2) != 1 )
+  {
+    n = defiler(F2);
+    
+    if (n->fgauche != NULL) {
+      enfiler(F2, n->fgauche);
+    }
+    if (n->fdroite != NULL) {
+      enfiler(F2, n->fdroite);
+    }
+    ajouter_cle(abr,n->cle);
+  }
+
+  return abr;
 }
 
 Arbre_t Rechercher(int cle, Arbre_t a) //DONE

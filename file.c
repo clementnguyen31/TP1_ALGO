@@ -22,6 +22,10 @@ int detruire_file(pfile_t f)
   return 1;
 }
 
+int taille(pfile_t f){
+  return f->queue - f->tete;
+}
+
 int file_vide(pfile_t f)
 {
   if (f->queue == (f->tete)%(MAX_FILE_SIZE))

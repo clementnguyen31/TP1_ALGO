@@ -19,3 +19,5 @@ int file_pleine (pfile_t f) ;
 pnoeud_t defiler (pfile_t f)  ;
 
 int enfiler (pfile_t f, pnoeud_t p) ;
+
+int taille(pfile_t f);

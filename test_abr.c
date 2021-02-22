@@ -16,11 +16,6 @@ int main (int argc, char**argv)
 
   a = lire_arbre (argv[1]) ;
   b = lire_arbre (argv[2]) ;
-  afficher_arbre (a,0) ;
-  
-  
-  afficher_arbre (b,0) ;
-  
-
-  afficher_arbre(intersection_deux_arbres(a,b),0);
+ 
+  afficher_arbre(a,0);
 }
