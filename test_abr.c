@@ -6,19 +6,16 @@
 int main (int argc, char**argv)
 {
   Arbre_t a ;
+  Arbre_t b ;
 
-  if (argc != 2)
+  if (argc != 3)
     {
       fprintf (stderr, "il manque le parametre nom de fichier\n") ;
       exit (-1) ;
     }
 
   a = lire_arbre (argv[1]) ;
-  
-  afficher_arbre (a,0) ;
-
-  /*
-     appeler les fonctions que vous
-     avez implementees
-  */
+  b = lire_arbre (argv[2]) ;
+ 
+  afficher_arbre(a,0);
 }
