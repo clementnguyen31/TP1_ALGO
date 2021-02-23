@@ -287,7 +287,6 @@ int nombre_cles_arbre_nr(Arbre_t a) //DONE
 }
 
 
-
 int trouver_cle_min(Arbre_t a) //DONE
 {
   if (EstArbreVide(a) == 1)
@@ -312,7 +311,7 @@ void imprimer_liste_cle_triee_r(Arbre_t a) //DONE
   {
     return;
   }
-  
+  printf("Les clés de l'arbre sont les suivantes : \n");
   imprimer_liste_cle_triee_r(a->fgauche);
 
   if(a->fgauche == NULL){
@@ -325,11 +324,20 @@ void imprimer_liste_cle_triee_r(Arbre_t a) //DONE
 
 void imprimer_liste_cle_triee_nr(Arbre_t a) //PAS DONE MAIS EASY
 {
-  if (EstArbreVide(a) == 1)
-  {
-    return;
+  ppile_t P = creer_pile();
+  while (a!=NULL) {
+    empiler(P,a);
+    a=a->fgauche;
   }
-
+  while (pile_vide(P) != 1) {
+    a = depiler(P); 
+    printf ("%d ", a->cle);
+    a = a->fdroite; 
+    while(a != NULL) { 
+      empiler(P,a); 
+      a = a->fgauche; 
+    }
+  }
 }
 
 int arbre_parfait(Arbre_t a) //DONE
@@ -453,23 +461,146 @@ Arbre_t rechercher_cle_inf_arbre(Arbre_t a, int valeur) //DONE
 
 Arbre_t detruire_cle_arbre(Arbre_t a, int cle) //PAS DONE
 {
-  return NULL;
+  if (rechercher_cle_arbre(a, cle) == NULL) {
+    return a;
+  }
+  else if (rechercher_cle_arbre(a, cle)==a) {
+
+    Arbre_t sol = rechercher_cle_inf_arbre(a, a->cle);
+    Arbre_t save = a->fdroite;
+    Arbre_t save2 = a->fgauche;
+
+    a = sol;
+   
+    if (save2 != sol) {
+      Arbre_t current = save2;
+
+      while (current->fdroite->fdroite != NULL) {
+        current = current->fdroite;
+      }
+      current->fdroite = NULL;
+      a->fdroite = save;
+      a->fgauche = save2;
+    }
+    return a;
+  }
+  else {
+    Arbre_t arbrecle = rechercher_cle_arbre(a, cle);
+
+    if (feuille(arbrecle) == 1) {
+
+      pfile_t file = creer_file();
+      enfiler(file, a);
+      int trouve = 0;
+
+      while (file_vide(file) != 1 && trouve == 0) 
+      {
+        Arbre_t current = defiler(file);
+        if (current->fgauche == arbrecle) {
+          trouve = 1;
+          current->fgauche = NULL;
+        }
+
+        else if (current->fdroite == arbrecle) {
+          trouve = 1;
+          current->fdroite = NULL;
+        }
+        enfiler(file, current->fgauche);
+        enfiler(file, current->fdroite);
+      }
+
+      return a;
+    }
+
+    else {
+
+      pfile_t file = creer_file();
+      enfiler(file, a);
+      int trouve = 0;
+
+      while (file_vide(file) != 1 && trouve == 0) 
+      {
+        Arbre_t current = defiler(file);
+
+        if (current->fgauche == arbrecle) {
+          trouve = 1;
+          if (current->fgauche->fgauche != NULL) {
+            Arbre_t sol = rechercher_cle_inf_arbre(current->fgauche, current->fgauche->cle);
+            if (sol == current->fgauche->fgauche) {
+              Arbre_t save = current->fgauche->fdroite;
+              current->fgauche = current->fgauche->fgauche;
+              current->fgauche->fdroite = save;
+            }
+            else {
+              Arbre_t save = current->fgauche->fgauche;
+              Arbre_t save2 = current->fgauche->fdroite;
+              current->fgauche = sol;
+              current->fgauche->fgauche = save;
+              Arbre_t fg = current->fgauche;
+              Arbre_t fgfg = current->fgauche->fgauche;
+              while (fgfg->fdroite->fdroite != NULL) {
+                fgfg = fgfg->fdroite;
+              }
+              fgfg->fdroite = NULL;
+              fg->fdroite = save2;
+            }
+          }
+          else {
+            current->fdroite = current->fdroite->fdroite;
+          }
+        }
+
+        else if (current->fdroite == arbrecle) {
+          trouve = 1;
+          if (current->fdroite->fgauche != NULL) {
+            Arbre_t sol = rechercher_cle_inf_arbre(current->fdroite, current->fdroite->cle);
+            if (sol == current->fdroite->fgauche) {
+              Arbre_t save = current->fdroite->fdroite;
+              current->fdroite = current->fdroite->fgauche;
+              current->fdroite->fdroite = save;
+            }
+            else {
+              Arbre_t save = current->fdroite->fgauche;
+              Arbre_t save2 = current->fdroite->fdroite;
+              current->fdroite = sol;
+              current->fdroite->fgauche = save;
+              Arbre_t fd = current->fdroite;
+              Arbre_t fdfg = current->fdroite->fgauche;
+              while (fdfg->fdroite->fdroite != NULL) {
+                fdfg = fdfg->fdroite;
+              }
+              fdfg->fdroite = NULL;
+              fd->fdroite = save2;
+            }
+          }
+          else {
+            current->fdroite = current->fdroite->fdroite;
+          }
+        }
+
+        enfiler(file, current->fgauche);
+        enfiler(file, current->fdroite);
+
+      }
+
+      return a;
+    }
+  }
 }
 
 Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
 {
-  if (EstArbreVide(a1) == 1 || EstArbreVide(a2) == 1)
+  if (a1 == NULL || a2 == NULL)
   {
     return NULL;
   }
-  
-  
-  int *inter = malloc(nombre_cles_arbre_nr(a1)); //Le tableau qui va contenir les clés communes
-  int i = 0;
+  Arbre_t n = NULL;
+  Arbre_t abr = NULL;
 
   pfile_t F = creer_file();
+
   enfiler(F, a1);
-  Arbre_t n;
+  
   
   while(file_vide(F) != 1 )
   {
@@ -482,16 +613,10 @@ Arbre_t intersection_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
       enfiler(F, n->fdroite);
     }
     
-    if (rechercher_cle_arbre(a2,n->cle) != NULL)
+    if (rechercher_cle_arbre(a2,n->cle))
     { //Rajoute la clé de l'intersection au tableau
-      inter[i] = n->cle;
-      i++;
+      abr = ajouter_cle(abr,n->cle);
     }
-  }
-  
-  Arbre_t abr;
-  for(int j = 0; j< i; j++){
-    ajouter_cle(abr,inter[j]);
   }
   return abr;
 }
@@ -503,12 +628,15 @@ Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
     return NULL;
   }
 
-  Arbre_t abr;
+  Arbre_t n = NULL;
+  Arbre_t abr = NULL;
+
   pfile_t F = creer_file();
   pfile_t F2 = creer_file();
+
   enfiler(F, a1);
   enfiler(F2, a2);
-  Arbre_t n;
+  
   
   while(file_vide(F) != 1 )
   {
@@ -520,7 +648,7 @@ Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
     if (n->fdroite != NULL) {
       enfiler(F, n->fdroite);
     }
-    ajouter_cle(abr,n->cle);
+    abr = ajouter_cle(abr,n->cle);
   }
   
   while(file_vide(F2) != 1 )
@@ -533,30 +661,50 @@ Arbre_t union_deux_arbres(Arbre_t a1, Arbre_t a2) //QUASI DONE
     if (n->fdroite != NULL) {
       enfiler(F2, n->fdroite);
     }
-    ajouter_cle(abr,n->cle);
+    abr = ajouter_cle(abr,n->cle);
   }
 
   return abr;
 }
 
-Arbre_t Rechercher(int cle, Arbre_t a) //DONE
-{
-  if (EstArbreVide(a) == 1)
+int inclusion_arbre(Arbre_t a1, Arbre_t a2){
+
+  if (a1 == NULL || a2 == NULL)
   {
     return NULL;
   }
-  else if (cle == a->cle)
-  {
-    return a;
-  }
-  else if (cle < a->cle)
-  {
-    return Rechercher(cle, a->fgauche);
-  }
-  else if (cle > a->cle)
-  {
-    return Rechercher(cle, a->fdroite);
-  }
+  Arbre_t n = NULL;
 
-  return NULL;
+  pfile_t F = creer_file();
+
+  enfiler(F, a1);
+  
+  
+  while(file_vide(F) != 1 )
+  {
+    n = defiler(F);
+    
+    if (n->fgauche != NULL) {
+      enfiler(F, n->fgauche);
+    }
+    if (n->fdroite != NULL) {
+      enfiler(F, n->fdroite);
+    }
+    
+    if (rechercher_cle_arbre(a2,n->cle) == NULL)
+    { 
+      return 0;
+    }
+  }
+  return 1;
 }
+
+
+
+
+
+
+
+
+
+
