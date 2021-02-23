@@ -12,6 +12,7 @@ ppile_t creer_pile ()
 int detruire_pile (ppile_t p)
 {
   free(p);
+  return 1;
 }  
 
 int pile_vide (ppile_t p)
